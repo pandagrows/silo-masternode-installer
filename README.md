@@ -5,7 +5,7 @@ This guide will assist you in setting up a Seed2Need Masternode on a Linux Serve
 If you require further assistance contact the support team @ [Discord](https://discord.gg/8R8mQ3J)
 ***
 ## Requirements
-1) **250,000 Seed2Need.**
+1) **1,000,000 Seed2Need.**
 2) **A Vultr VPS running Linux Ubuntu 18.04.**
 3) **A Windows local wallet.**
 4) **An SSH client such as [Bitvise](https://dl.bitvise.com/BvSshClient-Inst.exe)**
