@@ -1,8 +1,8 @@
-![Coin-Logo](https://github.com/Seed2Need/seed2need-silo-coin/blob/master/share/pixmaps/bitcoin32.png)
+![Coin-Logo](https://github.com/pandagrows/seed2need-silo-coin/blob/master/share/pixmaps/bitcoin32.png)
 # Seed2Need Masternode Setup Guide (Ubuntu 18.04)
 This guide will assist you in setting up a Seed2Need Masternode on a Linux Server running Ubuntu 18.04. (Use at your own risk)
 
-If you require further assistance contact the support team @ [Discord](https://discord.gg/Vzt4U6T)
+If you require further assistance contact the support team @ [Discord](https://discord.gg/8R8mQ3J)
 ***
 ## Requirements
 1) **250,000 Seed2Need.**
@@ -133,7 +133,7 @@ If you require further assistance contact the support team @ [Discord](https://d
 ## Section D: Preparing the Local wallet
 
 ***Step 1***
-* Download and install the Seed2Need wallet [here](https://github.com/Seed2Need/seed2need-silo-coin/releases)
+* Download and install the Seed2Need wallet [here](https://github.com/pandagrows/seed2need-silo-coin/releases)
 ***
 
 ***Step 2***
