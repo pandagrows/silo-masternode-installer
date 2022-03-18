@@ -37,7 +37,7 @@ function download_bootstrap() {
 }
 
 function install_params() {
-  echo -e "${GREEN}Downloading and Installing $COIN_NAME Params FIles${NC}"
+  echo -e "${GREEN}Downloading and Installing $COIN_NAME Params Files${NC}"
   mkdir -p /root/tmp
   cd /root/tmp >/dev/null 2>&1
   rm -rf util* >/dev/null 2>&1

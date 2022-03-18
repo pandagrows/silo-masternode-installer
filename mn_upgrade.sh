@@ -1,19 +1,20 @@
 #!/bin/bash
 
 TMP_FOLDER=$(mktemp -d)
-CONFIG_FILE="gamefrag.conf"
-GAMEFRAG_DAEMON="/usr/local/bin/gamefragd"
-GAMEFRAG_CLI="/usr/local/bin/gamefrag-cli"
-GAMEFRAG_REPO="https://github.com/Game-Frag/game-frag-coin.git"
-GAMEFRAG_LATEST_RELEASE="https://github.com/Game-Frag/game-frag-coin/releases/download/v5.2.0.1/gamefrag-5.2.0.1-ubuntu18-daemon.zip"
-COIN_BOOTSTRAP='https://bootstrap.gamefrag.com/boot_strap.tar.gz'
-COIN_ZIP=$(echo $GAMEFRAG_LATEST_RELEASE | awk -F'/' '{print $NF}')
+CONFIG_FILE="seed2need.conf"
+SEED2NEED_DAEMON="/usr/local/bin/seed2needd"
+SEED2NEED_CLI="/usr/local/bin/seed2need-cli"
+SEED2NEED_REPO="https://github.com/pandagrows/seed2need-silo-coin.git"
+SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.1.0/util.zipp"
+SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.1.0/seed2need-5.1.0-ubuntu18-daemon.zip"
+COIN_BOOTSTRAP='https://bootstrap.seed2need.me/boot_strap.tar.gz'
+COIN_ZIP=$(echo $SEED2NEED_LATEST_RELEASE | awk -F'/' '{print $NF}')
 COIN_CHAIN=$(echo $COIN_BOOTSTRAP | awk -F'/' '{print $NF}')
 
-DEFAULT_GAMEFRAG_PORT=42020
-DEFAULT_GAMEFRAG_RPC_PORT=42021
-DEFAULT_GAMEFRAG_USER="gamefrag"
-GAMEFRAG_USER="gamefrag"
+DEFAULT_SEED2NEED_PORT=4820
+DEFAULT_SEED2NEED_RPC_PORT=4821
+DEFAULT_SEED2NEED_USER="seed2need"
+SEED2NEED_USER="seed2need"
 NODE_IP=NotCheckedYet
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -22,14 +23,14 @@ NC='\033[0m'
 purgeOldInstallation() {
     echo -e "${GREEN}Searching and removing old $COIN_NAME Daemon{NC}"
     #kill wallet daemon
-	systemctl stop $GAMEFRAG_USER.service
+	systemctl stop $SEED2NEED_USER.service
 	
 	#Clean block chain for Bootstrap Update
     cd $CONFIGFOLDER >/dev/null 2>&1
     rm -rf *.pid *.lock database sporks chainstate zerocoin blocks >/dev/null 2>&1
 	
-    #remove binaries and GameFrag utilities
-    cd /usr/local/bin && sudo rm gamefrag-cli gamefrag-tx gamefragd > /dev/null 2>&1 && cd
+    #remove binaries and Seed2Need utilities
+    cd /usr/local/bin && sudo rm seed2need-cli seed2need-tx seed2needd > /dev/null 2>&1 && cd
     echo -e "${GREEN}* Done${NONE}";
 }
 
@@ -70,51 +71,51 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-if [ -n "$(pidof $GAMEFRAG_DAEMON)" ] || [ -e "$GAMEFRAG_DAEMON" ] ; then
+if [ -n "$(pidof $SEED2NEED_DAEMON)" ] || [ -e "$SEED2NEED_DAEMON" ] ; then
   echo -e "${GREEN}\c"
-  echo -e "GameFrag is already installed. Exiting..."
+  echo -e "Seed2Need is already installed. Exiting..."
   echo -e "{NC}"
   exit 1
 fi
 }
 
 
-function copy_gamefrag_binaries(){
+function copy_seed2need_binaries(){
   cd /root
-  wget $GAMEFRAG_LATEST_RELEASE
-  unzip gamefrag-5.2.0.1-ubuntu18-daemon.zip
-  cp gamefrag-cli gamefragd gamefrag-tx /usr/local/bin >/dev/null
-  chmod 755 /usr/local/bin/gamefrag* >/dev/null
+  wget $SEED2NEED_LATEST_RELEASE
+  unzip seed2need-5.1.0-ubuntu18-daemon.zip
+  cp seed2need-cli seed2needd seed2need-tx /usr/local/bin >/dev/null
+  chmod 755 /usr/local/bin/seed2need* >/dev/null
   clear
 }
 
-function install_gamefrag(){
-  echo -e "Installing GameFrag files."
-  copy_gamefrag_binaries
+function install_seed2need(){
+  echo -e "Installing Seed2Need files."
+  copy_seed2need_binaries
   clear
 }
 
 
-function systemd_gamefrag() {
+function systemd_seed2need() {
 sleep 2
-systemctl start $GAMEFRAG_USER.service
+systemctl start $SEED2NEED_USER.service
 }
 
 
 function important_information() {
  echo
  echo -e "================================================================================================================================"
- echo -e "GameFrag Masternode Upgraded to the Latest Version{NC}"
+ echo -e "Seed2Need Masternode Upgraded to the Latest Version{NC}"
  echo -e "Commands to Interact with the service are listed below{NC}"
- echo -e "Start: ${RED}systemctl start $GAMEFRAG_USER.service${NC}"
- echo -e "Stop: ${RED}systemctl stop $GAMEFRAG_USER.service${NC}"
- echo -e "Please check GameFrag is running with the following command: ${GREEN}systemctl status $GAMEFRAG_USER.service${NC}"
+ echo -e "Start: ${RED}systemctl start $SEED2NEED_USER.service${NC}"
+ echo -e "Stop: ${RED}systemctl stop $SEED2NEED_USER.service${NC}"
+ echo -e "Please check Seed2Need is running with the following command: ${GREEN}systemctl status $SEED2NEED_USER.service${NC}"
  echo -e "================================================================================================================================"
 }
 
 function setup_node() {
 	download_bootstrap
-	systemd_gamefrag
+	systemd_seed2need
 	important_information
 }
 
@@ -123,5 +124,5 @@ function setup_node() {
 clear
 purgeOldInstallation
 checks
-install_gamefrag
+install_seed2need
 
