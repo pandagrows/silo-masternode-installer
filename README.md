@@ -1,11 +1,11 @@
-![Coin-Logo](https://github.com/Game-Frag/game-frag-coin/blob/master/share/pixmaps/bitcoin32.png)
-# Game-Frag Masternode Setup Guide (Ubuntu 18.04)
-This guide will assist you in setting up a Game-Frag Masternode on a Linux Server running Ubuntu 18.04. (Use at your own risk)
+![Coin-Logo](https://github.com/Seed2Need/seed2need-silo-coin/blob/master/share/pixmaps/bitcoin32.png)
+# Seed2Need Masternode Setup Guide (Ubuntu 18.04)
+This guide will assist you in setting up a Seed2Need Masternode on a Linux Server running Ubuntu 18.04. (Use at your own risk)
 
 If you require further assistance contact the support team @ [Discord](https://discord.gg/Vzt4U6T)
 ***
 ## Requirements
-1) **250,000 Game-Frag.**
+1) **250,000 Seed2Need.**
 2) **A Vultr VPS running Linux Ubuntu 18.04.**
 3) **A Windows local wallet.**
 4) **An SSH client such as [Bitvise](https://dl.bitvise.com/BvSshClient-Inst.exe)**
@@ -102,7 +102,7 @@ If you require further assistance contact the support team @ [Discord](https://d
 * Paste the code below into the Bitvise terminal then press enter (it will just go to a new line)
 ![RootPassEnter](https://i.imgur.com/K6xlnav.png)
 
-`wget -q https://raw.githubusercontent.com/Game-FragProject/masternode-installer/master/mn_install.sh`
+`wget -q https://raw.githubusercontent.com/Seed2NeedProject/masternode-installer/master/mn_install.sh`
 ***
 
 ***Step 8***
@@ -133,7 +133,7 @@ If you require further assistance contact the support team @ [Discord](https://d
 ## Section D: Preparing the Local wallet
 
 ***Step 1***
-* Download and install the Game-Frag wallet [here](https://github.com/Game-Frag/game-frag-coin/releases)
+* Download and install the Seed2Need wallet [here](https://github.com/Seed2Need/seed2need-silo-coin/releases)
 ***
 
 ***Step 2***
