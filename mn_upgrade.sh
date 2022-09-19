@@ -5,8 +5,8 @@ CONFIG_FILE="seed2need.conf"
 SEED2NEED_DAEMON="/usr/local/bin/seed2needd"
 SEED2NEED_CLI="/usr/local/bin/seed2need-cli"
 SEED2NEED_REPO="https://github.com/pandagrows/seed2need-silo-coin.git"
-SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.1.0/util.zipp"
-SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.1.0/seed2need-5.1.0-ubuntu18-daemon.zip"
+SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.4.0/util.zipp"
+SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.4.0/seed2need-5.4.0-ubuntu18-daemon.zip"
 COIN_BOOTSTRAP='https://bootstrap.seed2need.me/boot_strap.tar.gz'
 COIN_ZIP=$(echo $SEED2NEED_LATEST_RELEASE | awk -F'/' '{print $NF}')
 COIN_CHAIN=$(echo $COIN_BOOTSTRAP | awk -F'/' '{print $NF}')
@@ -83,7 +83,7 @@ fi
 function copy_seed2need_binaries(){
   cd /root
   wget $SEED2NEED_LATEST_RELEASE
-  unzip seed2need-5.1.0-ubuntu18-daemon.zip
+  unzip seed2need-5.4.0-ubuntu18-qt.zip 
   cp seed2need-cli seed2needd seed2need-tx /usr/local/bin >/dev/null
   chmod 755 /usr/local/bin/seed2need* >/dev/null
   clear
