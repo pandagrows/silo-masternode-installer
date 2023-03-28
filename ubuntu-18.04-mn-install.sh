@@ -4,12 +4,15 @@ TMP_FOLDER=$(mktemp -d)
 CONFIG_FILE="seed2need.conf"
 SEED2NEED_DAEMON="/usr/local/bin/seed2needd"
 SEED2NEED_CLI="/usr/local/bin/seed2need-cli"
-SEED2NEED_REPO="https://github.com/pandagrows/seed2need-silo-coin.git"
-SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.4.0/util.zip"
-SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.4.0/seed2need-5.4.0-ubuntu18-qt.zip"
+SEED2NEED_REPO="https://github.com/Nebula-Coin/nebula-project-coin.git"
+SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.5.0/util.zip"
+SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.5.0/seed2need-5.5.0-ubuntu18-daemon.zip"
 COIN_BOOTSTRAP='https://bootstrap.seed2need.me/boot_strap.tar.gz'
 COIN_ZIP=$(echo $SEED2NEED_LATEST_RELEASE | awk -F'/' '{print $NF}')
 COIN_CHAIN=$(echo $COIN_BOOTSTRAP | awk -F'/' '{print $NF}')
+COIN_NAME='Seed2Need'
+CONFIGFOLDER='.seed2need'
+COIN_BOOTSTRAP_NAME='boot_strap.tar.gz'
 
 DEFAULT_SEED2NEED_PORT=4820
 DEFAULT_SEED2NEED_RPC_PORT=4821
@@ -22,30 +25,29 @@ NC='\033[0m'
 
 function download_bootstrap() {
   echo -e "${GREEN}Downloading and Installing $COIN_NAME BootStrap${NC}"
-  mkdir -p /root/tmp
-  cd /root/tmp >/dev/null 2>&1
+  mkdir -p /opt/chaintmp/
+  cd /opt/chaintmp >/dev/null 2>&1
   rm -rf boot_strap* >/dev/null 2>&1
-  wget -q $COIN_BOOTSTRAP
-  cd $CONFIGFOLDER >/dev/null 2>&1
-  rm -rf blk* database* txindex* peers.dat
-  cd /root/tmp >/dev/null 2>&1
-  tar -zxf $COIN_CHAIN /root/tmp >/dev/null 2>&1
-  cp -Rv cache/* $CONFIGFOLDER >/dev/null 2>&1
+  wget $COIN_BOOTSTRAP >/dev/null 2>&1
+  cd /home/$SEED2NEED_USER/$CONFIGFOLDER
+  rm -rf sporks zerocoin blocks database chainstate peers.dat
+  cd /opt/chaintmp >/dev/null 2>&1
+  tar -zxf $COIN_BOOTSTRAP_NAME
+  cp -Rv cache/* /home/$SEED2NEED_USER/$CONFIGFOLDER/ >/dev/null 2>&1
+  chown -Rv $SEED2NEED_USER /home/$SEED2NEED_USER/$CONFIGFOLDER >/dev/null 2>&1
   cd ~ >/dev/null 2>&1
-  rm -rf $TMP_FOLDER >/dev/null 2>&1
-  clear
+  rm -rf /opt/chaintmp >/dev/null 2>&1
 }
 
 function install_params() {
   echo -e "${GREEN}Downloading and Installing $COIN_NAME Params Files${NC}"
-  mkdir -p /root/tmp
-  cd /root/tmp >/dev/null 2>&1
+  mkdir -p /opt/tmp/
+  cd /opt/tmp
   rm -rf util* >/dev/null 2>&1
-  wget -q $SEED2NEED_PARAMS
-  unzip $SEED2NEED_PARAMS >/dev/null 2>&1
-  chmod -Rv +x util >/dev/null 2>&1
-  util/./fetch-params.sh
-  clear
+  wget $SEED2NEED_PARAMS >/dev/null 2>&1
+  unzip util.zip >/dev/null 2>&1
+  chmod -Rv 777 /opt/tmp/util/fetch-params.sh >/dev/null 2>&1
+  runuser -l $SEED2NEED_USER -c '/opt/tmp/util/./fetch-params.sh' >/dev/null 2>&1
 }
 
 purgeOldInstallation() {
@@ -59,7 +61,7 @@ purgeOldInstallation() {
 	
     #remove binaries and Seed2Need utilities
     cd /usr/local/bin && sudo rm seed2need-cli seed2need-tx seed2needd > /dev/null 2>&1 && cd
-    echo -e "${GREEN}* Done${NONE}";
+    echo -e "${GREEN}* Done${NC}";
 }
 
 
@@ -103,7 +105,7 @@ apt-add-repository -y ppa:pivx/pivx >/dev/null 2>&1
 echo -e "Installing required packages, it may take some time to finish.${NC}"
 apt-get update >/dev/null 2>&1
 apt-get upgrade >/dev/null 2>&1
-apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" git make build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 libssl-dev libgmp-dev libevent-dev libboost-all-dev libdb4.8-dev libdb4.8++-dev libminiupnpc-dev ufw fail2ban pwgen curl unzip >/dev/null 2>&1
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" git make build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 libssl-dev libgmp-dev libevent-dev libboost-all-dev libdb4.8-dev libdb4.8++-dev ufw fail2ban pwgen curl unzip >/dev/null 2>&1
 NODE_IP=$(curl -s4 icanhazip.com)
 clear
 if [ "$?" -gt "0" ];
@@ -164,7 +166,7 @@ clear
 function copy_seed2need_binaries(){
    cd /root
   wget $SEED2NEED_LATEST_RELEASE
-  unzip seed2need-5.4.0-ubuntu18-qt.zip 
+  unzip seed2need-5.5.0-ubuntu18-daemon.zip
   cp seed2need-cli seed2needd seed2need-tx /usr/local/bin >/dev/null
   chmod 755 /usr/local/bin/seed2need* >/dev/null
   clear
@@ -215,14 +217,6 @@ EOF
   sleep 3
   systemctl start $SEED2NEED_USER.service
   systemctl enable $SEED2NEED_USER.service
-
-  if [[ -z "$(ps axo user:15,cmd:100 | egrep ^$SEED2NEED_USER | grep $SEED2NEED_DAEMON)" ]]; then
-    echo -e "${RED}seed2needd is not running${NC}, please investigate. You should start by running the following commands as root:"
-    echo -e "${GREEN}systemctl start $SEED2NEED_USER.service"
-    echo -e "systemctl status $SEED2NEED_USER.service"
-    echo -e "less /var/log/syslog${NC}"
-    exit 1
-  fi
 }
 
 function ask_port() {
@@ -278,53 +272,27 @@ server=1
 daemon=1
 port=$SEED2NEED_PORT
 #External Seed2Need IPV4
+addnode=135.181.254.116:4820
+addnode=135.181.193.63:4820
+addnode=65.21.242.191:4820
+addnode=65.109.182.123:4820
 addnode=199.127.140.224:4820
 addnode=199.127.140.225:4820
-addnode=199.127.140.228:4820
-addnode=199.127.140.231:4820
-addnode=199.127.140.233:4820
-addnode=199.127.140.235:4820
-addnode=199.127.140.236:4820
-
-#External Seed2Need IPV6
-addnode=[2604:6800:5e11:3611::1]:4820
-addnode=[2604:6800:5e11:3611::2]:4820
-addnode=[2604:6800:5e11:3612::4]:4820
-addnode=[2604:6800:5e11:3613::2]:4820
-addnode=[2604:6800:5e11:3613::5]:4820
-addnode=[2604:6800:5e11:3614::1]:4820
-addnode=[2604:6800:5e11:3614::2]:4820
-addnode=[2604:6800:5e11:3614::3]:4820
-addnode=[2604:6800:5e11:3614::4]:4820
+addnode=[2a01:04f9:c012:4fb0::0001]:4820
+addnode=[2a01:04f9:c011:24ca::0001]:4820
 
 #External WhiteListing IPV4
+whitelist=135.181.254.116
+whitelist=135.181.193.63
+whitelist=65.21.242.191
+whitelist=65.109.182.123
+whitelist=23.245.6.173
 whitelist=199.127.140.224
 whitelist=199.127.140.225
-whitelist=199.127.140.228
-whitelist=199.127.140.231
-whitelist=199.127.140.233
-whitelist=199.127.140.235
-whitelist=199.127.140.236
 
 #External WhiteListing IPV6
-whitelist=[2604:6800:5e11:3611::1]
-whitelist=[2604:6800:5e11:3611::2]
-whitelist=[2604:6800:5e11:3612::4]
-whitelist=[2604:6800:5e11:3613::2]
-whitelist=[2604:6800:5e11:3613::5]
-whitelist=[2604:6800:5e11:3614::1]
-whitelist=[2604:6800:5e11:3614::2]
-whitelist=[2604:6800:5e11:3614::3]
-whitelist=[2604:6800:5e11:3614::4]
-
-#Internal WhiteListing IPV4
-whitelist=10.36.11.1
-whitelist=10.36.11.2
-whitelist=10.36.12.4
-whitelist=10.36.13.2
-whitelist=10.36.13.5
-whitelist=10.36.14.1
-whitelist=10.36.14.2
+whitelist=[2a01:04f9:c012:4fb0::0001]
+whitelist=[2a01:04f9:c011:24ca::0001]
 EOF
 }
 
@@ -370,13 +338,13 @@ function important_information() {
 
 function setup_node() {
   ask_user
+  install_params
+  download_bootstrap
   check_port
   create_config
   create_key
   update_config
   enable_firewall
-  download_bootstrap
-  install_params
   systemd_seed2need
   important_information
 }
