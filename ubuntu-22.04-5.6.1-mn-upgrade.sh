@@ -4,8 +4,8 @@ CONFIG_FILE="seed2need.conf"
 SEED2NEED_DAEMON="/usr/local/bin/seed2needd"
 SEED2NEED_CLI="/usr/local/bin/seed2need-cli"
 SEED2NEED_REPO="https://github.com/pandagrows/seed2need-silo-coin.git"
-SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.5.0/util.zip"
-SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.5.0/seed2need-5.5.0-ubuntu18-daemon.zip"
+SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.6.1/util.zip"
+SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.6.1/seed2need-5.6.1-ubuntu22-daemon.zip"
 COIN_BOOTSTRAP='https://bootstrap.seed2need.me/boot_strap.tar.gz'
 COIN_ZIP=$(echo $SEED2NEED_LATEST_RELEASE | awk -F'/' '{print $NF}')
 COIN_CHAIN=$(echo $COIN_BOOTSTRAP | awk -F'/' '{print $NF}')
@@ -60,8 +60,8 @@ fi
 
 
 function checks() {
-if [[ $(lsb_release -d) != *18.04* ]]; then
-  echo -e "${RED}You are not running Ubuntu 18.04. Installation is cancelled.${NC}"
+if [[ $(lsb_release -d) != *22.04* ]]; then
+  echo -e "${RED}You are not running Ubuntu 22.04. Installation is cancelled.${NC}"
   exit 1
 fi
 
@@ -81,8 +81,9 @@ fi
 
 function copy_seed2need_binaries(){
   cd /root
+  apt-get install build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 libgmp-dev libevent-dev libboost-all-dev libsodium-dev cargo libminiupnpc-dev libnatpmp-dev libzmq3-dev -y
   wget $SEED2NEED_LATEST_RELEASE
-  unzip seed2need-5.5.0-ubuntu18-daemon.zip
+  unzip seed2need-5.6.1-ubuntu22-daemon.zip
   cp seed2need-cli seed2needd seed2need-tx /usr/local/bin >/dev/null
   chmod 755 /usr/local/bin/seed2need* >/dev/null
   clear

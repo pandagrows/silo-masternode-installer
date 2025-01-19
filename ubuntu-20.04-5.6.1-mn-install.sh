@@ -4,9 +4,9 @@ TMP_FOLDER=$(mktemp -d)
 CONFIG_FILE="seed2need.conf"
 SEED2NEED_DAEMON="/usr/local/bin/seed2needd"
 SEED2NEED_CLI="/usr/local/bin/seed2need-cli"
-SEED2NEED_REPO="https://github.com/Nebula-Coin/nebula-project-coin.git"
-SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.5.0/util.zip"
-SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.5.0/seed2need-5.5.0-ubuntu18-daemon.zip"
+SEED2NEED_REPO="https://github.com/pandagrows/seed2need-silo-coin.git"
+SEED2NEED_PARAMS="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v.5.6.1/util.zip"
+SEED2NEED_LATEST_RELEASE="https://github.com/pandagrows/seed2need-silo-coin/releases/download/v5.6.1/seed2need-5.6.1-ubuntu20-daemon.zip"
 COIN_BOOTSTRAP='https://bootstrap.seed2need.me/boot_strap.tar.gz'
 COIN_ZIP=$(echo $SEED2NEED_LATEST_RELEASE | awk -F'/' '{print $NF}')
 COIN_CHAIN=$(echo $COIN_BOOTSTRAP | awk -F'/' '{print $NF}')
@@ -75,8 +75,8 @@ fi
 
 
 function checks() {
-if [[ $(lsb_release -d) != *18.04* ]]; then
-  echo -e "${RED}You are not running Ubuntu 18.04. Installation is cancelled.${NC}"
+if [[ $(lsb_release -d) != *20.04* ]]; then
+  echo -e "${RED}You are not running Ubuntu 20.04. Installation is cancelled.${NC}"
   exit 1
 fi
 
@@ -101,11 +101,11 @@ DEBIAN_FRONTEND=noninteractive apt-get update > /dev/null 2>&1
 DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y -qq upgrade >/dev/null 2>&1
 apt install -y software-properties-common >/dev/null 2>&1
 echo -e "${GREEN}Adding Pivx PPA repository"
-apt-add-repository -y ppa:pivx/pivx >/dev/null 2>&1
+apt-add-repository -y ppa:pivx/berkeley-db4 >/dev/null 2>&1
 echo -e "Installing required packages, it may take some time to finish.${NC}"
 apt-get update >/dev/null 2>&1
 apt-get upgrade >/dev/null 2>&1
-apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" git make build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 libssl-dev libgmp-dev libevent-dev libboost-all-dev libdb4.8-dev libdb4.8++-dev ufw fail2ban pwgen curl unzip >/dev/null 2>&1
+apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" git make build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 libssl-dev libgmp-dev libevent-dev libboost-all-dev libdb4.8-dev libdb4.8++-dev ufw fail2ban pwgen curl unzip libminiupnpc-dev libnatpmp-dev libzmq3-dev >/dev/null 2>&1
 NODE_IP=$(curl -s4 icanhazip.com)
 clear
 if [ "$?" -gt "0" ];
@@ -114,9 +114,9 @@ if [ "$?" -gt "0" ];
     echo "apt-get update"
     echo "apt-get -y upgrade"
     echo "apt -y install software-properties-common"
-    echo "apt-add-repository -y ppa:pivx/pivx"
+    echo "apt-add-repository -y ppa:pivx/berkeley-db4"
     echo "apt-get update"
-    echo "apt install -y git make build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 libssl-dev libgmp-dev libevent-dev libboost-all-dev libdb4.8-dev libdb4.8++-dev unzip"
+    echo "apt install -y git make build-essential libtool bsdmainutils autotools-dev autoconf pkg-config automake python3 libssl-dev libgmp-dev libevent-dev libboost-all-dev libdb4.8-dev libdb4.8++-dev unzip libminiupnpc-dev libnatpmp-dev libzmq3-dev -y"
     exit 1
 fi
 clear
@@ -166,7 +166,7 @@ clear
 function copy_seed2need_binaries(){
    cd /root
   wget $SEED2NEED_LATEST_RELEASE
-  unzip seed2need-5.5.0-ubuntu18-daemon.zip
+  unzip seed2need-5.6.1-ubuntu20-daemon.zip
   cp seed2need-cli seed2needd seed2need-tx /usr/local/bin >/dev/null
   chmod 755 /usr/local/bin/seed2need* >/dev/null
   clear
