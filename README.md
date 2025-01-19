@@ -102,7 +102,7 @@ If you require further assistance contact the support team @ [Discord](https://d
 * Paste the code below into the Bitvise terminal then press enter (it will just go to a new line)
 ![RootPassEnter](https://i.imgur.com/K6xlnav.png)
 
-`wget -q https://raw.githubusercontent.com/pandagrows/silo-masternode-installer/main/ubuntu-18.04-mn-install.sh`
+`wget -q https://raw.githubusercontent.com/pandagrows/silo-masternode-installer/refs/heads/main/ubuntu-18.04-5.6.1-mn-install.sh`
 ***
 
 ***Step 8***
